@@ -1,6 +1,5 @@
 #include "raylib.h"
 #include "fish.h"
-#include <iostream>
 
 int main(void) {
 
@@ -25,8 +24,6 @@ int main(void) {
         SetWindowSize(GetScreenWidth(), GetScreenHeight());
 
         mousePosition = GetMousePosition();
-
-        std::cout << mousePosition.y;
 
         LeFish.Update();
         tardigradeXPos += GetFrameTime() * 10.0f;
