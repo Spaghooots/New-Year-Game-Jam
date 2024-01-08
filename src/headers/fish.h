@@ -6,8 +6,8 @@ class Fish {
 private:
     Texture2D texture;
 
-    float speed = 10;
-    float turnSpeed = 50;
+    float speed;
+    float turnDampen = 10;
     float rotation = 0;
 
     Vector2 direction;
@@ -20,13 +20,13 @@ private:
 
 public:
 
-    Fish(Texture2D texture, Vector2 position);
-    Vector2 turnTo(Vector2 current, Vector2 desired, float turn);
+    Fish(Texture2D texture, Vector2 position, float speed);
+    Vector2 getPosition() { return Vector2Subtract(position,Vector2Scale(Vector2Normalize(direction), texture.width/2 + 10)); }
     void Update(Vector2 desiredPosition);
     void Draw();
 };
 
-Fish::Fish(Texture2D texture, Vector2 position) {
+Fish::Fish(Texture2D texture, Vector2 position, float speed) {
 
     Fish::direction.x = 1;
     Fish::direction.y = 1;
@@ -37,40 +37,26 @@ Fish::Fish(Texture2D texture, Vector2 position) {
 
     Fish::texture = texture;
     Fish::position = position;
+    Fish::speed = speed;
     //Fish::desiredPosition = desiredPosition;
 
     Fish::rectSlice = Rectangle{0, 0, (float)texture.width, (float)texture.height};
-    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width, (float)texture.height};
 }
 
-
-// This is not used right now, I need to start over with it
-Vector2 Fish::turnTo(Vector2 current, Vector2 desired, float turn) {
-    current = Vector2Normalize(current);
-    desired = Vector2Normalize(desired);
-
-    if (current.y > desired.y) {
-        current.y = cos(turn * current.y) + sin(turn * current.x);
-        current.x = cos(turn * current.x) - sin(turn * current.y);
-    }
-    else if (current.y > desired.y) {
-        current.y = cos(-turn * current.y) + sin(-turn * current.x);
-        current.x = cos(-turn * current.x) - sin(-turn * current.y);
-    }
-
-    return current;
-}
 
 void Fish::Update(Vector2 desiredPosition) {
 
-    // I am trying to make the fish look at the mouse pointer
-    Fish::rotation = Vector2Angle(Vector2Subtract(desiredPosition, Fish::position), Vector2{1,0});
+    Fish::direction = Vector2Subtract(desiredPosition, Fish::position);
+    Fish::rotation = Vector2Angle(Fish::direction, Vector2{1,0});
 
-    
+
+    Fish::position = Vector2Add(Fish::position, Vector2Scale(Fish::direction, speed/100));
+    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width, (float)texture.height};
 
 
 }
 
 void Fish::Draw() {
-    DrawTexturePro(Fish::texture, Fish::rectSlice, Fish::rectDraw, Fish::origin, Fish::rotation, WHITE);
+
+    DrawTexturePro(Fish::texture, Fish::rectSlice, Fish::rectDraw, Fish::origin, Fish::rotation* -57.29578 /*Conversion to degrees*/, WHITE);
 }
