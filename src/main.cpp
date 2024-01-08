@@ -16,8 +16,8 @@ int main(void) {
         BeginDrawing();
 
         ClearBackground(BLACK);
-        DrawTexture(tardigradeTexture, 50, 50, WHITE);
-        DrawText("balls", 100, 100, 20, LIGHTGRAY);
+        DrawTexture(tardigradeTexture, 0, 0, WHITE);
+        DrawText("balls", 0, 0, 20, LIGHTGRAY);
 
         EndDrawing();
 
