@@ -8,7 +8,7 @@ private:
     Texture2D texture;
 
     float speed = 10;
-    float turnSpeed = 5;
+    float turnSpeed = 50;
     float rotation = 0;
 
     Vector2 direction;
@@ -17,22 +17,22 @@ private:
 
 public:
 
-    Fish(Texture2D texture, int x, int y);
-    Vector2 turnTo(Vector2 current, Vector2 desired);
+    Fish(Texture2D texture, Vector2 position, Vector2 desiredPosition);
+    Vector2 turnTo(Vector2 current, Vector2 desired, float turn);
     void Update();
     void Draw();
 };
 
-Fish::Fish(Texture2D texture, int x, int y) {
+Fish::Fish(Texture2D texture, Vector2 position, Vector2 desiredPosition) {
     Fish::texture = texture;
-    Fish::position.x = x;
-    Fish::position.y = y;
+    Fish::position = position;
+    Fish::desiredPosition = desiredPosition;
 
     Fish::direction.x = 1;
     Fish::direction.y = 0;
 }
 
-Vector2 turnTo(Vector2 current, Vector2 desired, float turn) {
+Vector2 Fish::turnTo(Vector2 current, Vector2 desired, float turn) {
     current = Vector2Normalize(current);
     desired = Vector2Normalize(desired);
 
@@ -41,14 +41,19 @@ Vector2 turnTo(Vector2 current, Vector2 desired, float turn) {
         current.x = cos(turn * current.x) - sin(turn * current.y);
     }
     else {
-        current.y = cos(-turn * current.y) + sin(-turn * current.x);
-        current.x = cos(-turn * current.x) - sin(-turn * current.y);
+        //current.y = cos(-turn * current.y) + sin(-turn * current.x);
+        //current.x = cos(-turn * current.x) - sin(-turn * current.y);
     }
+
+    return current;
 }
 
 void Fish::Update() {
 
+    Fish::direction = Fish::turnTo(Fish::direction, Fish::desiredPosition, Fish::turnSpeed);
     Fish::rotation = atan2(direction.x, direction.y);
+
+    
 
 
 }
