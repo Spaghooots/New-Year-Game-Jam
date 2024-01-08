@@ -7,7 +7,7 @@ int main(void) {
 
     InitWindow(screenWidth, screenHeight, "Template");
 
-    Texture2D fish = LoadTexture("assets/graphics/temp_fish.png");
+    Texture2D tardigradeTexture = LoadTexture("assets/graphics/tardigrade.png");
 
     SetTargetFPS(60);
 
@@ -16,14 +16,14 @@ int main(void) {
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
-        DrawTexture(fish, 100, 100, WHITE);
+        DrawTexture(tardigradeTexture, 100, 100, WHITE);
         DrawText("balls", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
 
     }
 
-    UnloadTexture(fish);
+    UnloadTexture(tardigradeTexture);
     CloseWindow();
 
     return 0;
