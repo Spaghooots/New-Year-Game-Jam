@@ -2,8 +2,8 @@
 
 int main(void) {
 
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 200;
+    const int screenHeight = 200;
 
     InitWindow(screenWidth, screenHeight, "Template");
 
@@ -15,9 +15,9 @@ int main(void) {
 
         BeginDrawing();
 
-        ClearBackground(RAYWHITE);
-        DrawTexture(tardigradeTexture, 100, 100, WHITE);
-        DrawText("balls", 190, 200, 20, LIGHTGRAY);
+        ClearBackground(BLACK);
+        DrawTexture(tardigradeTexture, 50, 50, WHITE);
+        DrawText("balls", 100, 100, 20, LIGHTGRAY);
 
         EndDrawing();
 
