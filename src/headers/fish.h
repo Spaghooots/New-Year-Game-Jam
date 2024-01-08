@@ -1,6 +1,5 @@
 #include "raylib.h"
 #include "raymath.h"
-#include <cmath>
 
 class Fish {
 
@@ -14,24 +13,38 @@ private:
     Vector2 direction;
     Vector2 desiredPosition;
     Vector2 position;
+    Vector2 origin;
+
+    Rectangle rectSlice;
+    Rectangle rectDraw;
 
 public:
 
-    Fish(Texture2D texture, Vector2 position, Vector2 desiredPosition);
+    Fish(Texture2D texture, Vector2 position);
     Vector2 turnTo(Vector2 current, Vector2 desired, float turn);
-    void Update();
+    void Update(Vector2 desiredPosition);
     void Draw();
 };
 
-Fish::Fish(Texture2D texture, Vector2 position, Vector2 desiredPosition) {
-    Fish::texture = texture;
-    Fish::position = position;
-    Fish::desiredPosition = desiredPosition;
+Fish::Fish(Texture2D texture, Vector2 position) {
 
     Fish::direction.x = 1;
-    Fish::direction.y = 0;
+    Fish::direction.y = 1;
+
+    Fish::origin.x = texture.width/2;
+    Fish::origin.y = texture.height/2;
+
+
+    Fish::texture = texture;
+    Fish::position = position;
+    //Fish::desiredPosition = desiredPosition;
+
+    Fish::rectSlice = Rectangle{0, 0, (float)texture.width, (float)texture.height};
+    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width, (float)texture.height};
 }
 
+
+// This is not used right now, I need to start over with it
 Vector2 Fish::turnTo(Vector2 current, Vector2 desired, float turn) {
     current = Vector2Normalize(current);
     desired = Vector2Normalize(desired);
@@ -40,18 +53,18 @@ Vector2 Fish::turnTo(Vector2 current, Vector2 desired, float turn) {
         current.y = cos(turn * current.y) + sin(turn * current.x);
         current.x = cos(turn * current.x) - sin(turn * current.y);
     }
-    else {
-        //current.y = cos(-turn * current.y) + sin(-turn * current.x);
-        //current.x = cos(-turn * current.x) - sin(-turn * current.y);
+    else if (current.y > desired.y) {
+        current.y = cos(-turn * current.y) + sin(-turn * current.x);
+        current.x = cos(-turn * current.x) - sin(-turn * current.y);
     }
 
     return current;
 }
 
-void Fish::Update() {
+void Fish::Update(Vector2 desiredPosition) {
 
-    Fish::direction = Fish::turnTo(Fish::direction, Fish::desiredPosition, Fish::turnSpeed);
-    Fish::rotation = atan2(direction.x, direction.y);
+    // I am trying to make the fish look at the mouse pointer
+    Fish::rotation = Vector2Angle(Vector2Subtract(desiredPosition, Fish::position), Vector2{1,0});
 
     
 
@@ -59,5 +72,5 @@ void Fish::Update() {
 }
 
 void Fish::Draw() {
-    DrawTextureEx(Fish::texture, Fish::position, Fish::rotation, 1, WHITE);
+    DrawTexturePro(Fish::texture, Fish::rectSlice, Fish::rectDraw, Fish::origin, Fish::rotation, WHITE);
 }
