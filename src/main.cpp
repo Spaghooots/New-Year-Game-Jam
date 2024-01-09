@@ -1,3 +1,4 @@
+#include <iostream>
 #include "raylib.h"
 #include "fish.h"
 
@@ -12,14 +13,15 @@ int main(void) {
     Texture2D tardigradeTexture = LoadTexture("assets/graphics/tardigrade.png");
     Texture2D cursorTexture = LoadTexture("assets/graphics/fish_food_cursor.png");
     
-    SetTargetFPS(60);
-
     // All my fishies :)
     Fish headFish = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 2);
     Fish Fishron = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 10);
     Fish LeFishe = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 10);
     Fish Terry = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 10);
 
+    int waterLevelStartY = 50;
+
+    SetTargetFPS(60);
     while (!WindowShouldClose()) {
 
         SetWindowSize(fmin(GetScreenWidth(), screenWidth), fmin(GetScreenHeight(), screenHeight));
@@ -31,16 +33,16 @@ int main(void) {
 
         BeginDrawing();
         
+        ClearBackground(SKYBLUE);
+            // Water
+            DrawRectangle(0, waterLevelStartY, GetScreenWidth(), GetScreenHeight() - waterLevelStartY, BLUE);
 
-        ClearBackground(BLUE);
+            headFish.Draw();
+            Fishron.Draw();
+            LeFishe.Draw();
+            Terry.Draw();
 
-        headFish.Draw();
-        Fishron.Draw();
-        LeFishe.Draw();
-        Terry.Draw();
-
-        DrawTexture(cursorTexture, GetMouseX(), GetMouseY(), WHITE);
-
+            DrawTexture(cursorTexture, GetMouseX(), GetMouseY(), WHITE);
         EndDrawing();
 
     }
