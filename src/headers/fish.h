@@ -58,5 +58,5 @@ void Fish::Update(Vector2 desiredPosition) {
 
 void Fish::Draw() {
 
-    DrawTexturePro(Fish::texture, Fish::rectSlice, Fish::rectDraw, Fish::origin, Fish::rotation* -57.29578 /*Conversion to degrees*/, WHITE);
+    DrawTexturePro(Fish::texture, Fish::rectSlice, Fish::rectDraw, Fish::origin, Fish::rotation * -(180 / PI), WHITE);
 }
