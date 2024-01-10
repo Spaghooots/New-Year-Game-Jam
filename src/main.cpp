@@ -12,16 +12,25 @@ int main(void) {
 
     InitWindow(screenWidth, screenHeight, "Template");
 
-    Texture2D tardigradeTexture = LoadTexture("assets/graphics/tardigrade.png");
+    Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaserFish.png");
     Texture2D cursorTexture = LoadTexture("assets/graphics/fish_food_cursor.png");
-    
-    // All my fishies :)
-    Fish headFish = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
-    Fish Fishron = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
-    Fish LeFishe = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
-    Fish Terry = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
 
+    
+    /* All my fishies (Do not delete this comment!)
+    Fish headFish = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
+    Fish Fishron = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
+    Fish LeFishe = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
+    Fish Terry = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
+    */
+    
+    
     std::vector<Food> foodItems;
+    std::vector<Fish> fishies;
+
+    int fishAmount = 2;
+
+    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}));
+    fishies.push_back(Fish(chaserFishTexture, Vector2{0, 0}));
 
     int foodTimer = 0;
     int foodSpawnDelayMilliseconds = 300000;
@@ -30,12 +39,15 @@ int main(void) {
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
 
-        SetWindowSize(fmin(GetScreenWidth(), screenWidth), fmin(GetScreenHeight(), screenHeight));
+        if (IsKeyPressed(KEY_SPACE)) {
+            fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}));
+            fishAmount ++;
+        }
         
-        headFish.Update(GetMousePosition());
-        Fishron.Update(headFish.getPosition());
-        LeFishe.Update(Fishron.getPosition());
-        Terry.Update(LeFishe.getPosition());
+        fishies[0].Update(GetMousePosition());
+        for (int i = 1; i < fishAmount; i++) {
+            fishies[i].Update(fishies[i-1].getPosition());
+        }
 
         foodTimer += GetFrameTime();
         if (foodTimer + GetFrameTime() >= foodSpawnDelayMilliseconds)
@@ -54,10 +66,11 @@ int main(void) {
             // Water
             DrawRectangle(0, waterLevelY, GetScreenWidth(), GetScreenHeight() - waterLevelY, BLUE);
 
-            headFish.Draw();
-            Fishron.Draw();
-            LeFishe.Draw();
-            Terry.Draw();
+            DrawText("Press space to spawn a fish", 100, 100, 20, WHITE);
+
+            for (Fish fishie : fishies) {
+                fishie.Draw();
+            }
 
             for (Food foodItem : foodItems)
             {
@@ -69,7 +82,7 @@ int main(void) {
 
     }
 
-    UnloadTexture(tardigradeTexture);
+    UnloadTexture(chaserFishTexture);
     UnloadTexture(cursorTexture);
     CloseWindow();
 

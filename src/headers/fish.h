@@ -7,7 +7,7 @@ private:
     Texture2D texture;
 
     float speed = 5;
-    float turnDampen = 7;
+    float turnDampen = 10;
     float rotation = 0;
 
     Vector2 direction;
@@ -50,12 +50,20 @@ void Fish::Update(Vector2 desiredPosition) {
 
 
     Fish::position = Vector2Add(Fish::position, Vector2Scale(Vector2Normalize(Fish::direction), speed));
-    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width, (float)texture.height};
+
+    
+    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width * 2, (float)texture.height};
+
+    if (Fish::direction.x < 0) {
+        Fish::rectSlice.height = -Fish::texture.height;
+    } else {
+        Fish::rectSlice.height = Fish::texture.height;
+    }
 
 
 }
 
 void Fish::Draw() {
-
+    
     DrawTexturePro(Fish::texture, Fish::rectSlice, Fish::rectDraw, Fish::origin, Fish::rotation * -(180 / PI), WHITE);
 }
