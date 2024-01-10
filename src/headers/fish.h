@@ -6,12 +6,11 @@ class Fish {
 private:
     Texture2D texture;
 
-    float speed;
-    float turnDampen = 10;
+    float speed = 5;
+    float turnDampen = 7;
     float rotation = 0;
 
     Vector2 direction;
-    Vector2 desiredPosition;
     Vector2 position;
     Vector2 origin;
 
@@ -20,16 +19,16 @@ private:
 
 public:
 
-    Fish(Texture2D texture, Vector2 position, float speed);
+    Fish(Texture2D texture, Vector2 position);
     Vector2 getPosition() { return Vector2Subtract(position,Vector2Scale(Vector2Normalize(direction), texture.width/2 + 10)); }
     void Update(Vector2 desiredPosition);
     void Draw();
 };
 
-Fish::Fish(Texture2D texture, Vector2 position, float speed) {
+Fish::Fish(Texture2D texture, Vector2 position) {
 
     Fish::direction.x = 1;
-    Fish::direction.y = 1;
+    Fish::direction.y = 0;
 
     Fish::origin.x = texture.width/2;
     Fish::origin.y = texture.height/2;
@@ -37,8 +36,6 @@ Fish::Fish(Texture2D texture, Vector2 position, float speed) {
 
     Fish::texture = texture;
     Fish::position = position;
-    Fish::speed = speed;
-    //Fish::desiredPosition = desiredPosition;
 
     Fish::rectSlice = Rectangle{0, 0, (float)texture.width, (float)texture.height};
 }
@@ -46,11 +43,13 @@ Fish::Fish(Texture2D texture, Vector2 position, float speed) {
 
 void Fish::Update(Vector2 desiredPosition) {
 
-    Fish::direction = Vector2Subtract(desiredPosition, Fish::position);
+    float angle = Vector2Angle(Fish::direction, Vector2Negate(Vector2Subtract(Fish::position, desiredPosition)));
+
+    Fish::direction = Vector2Rotate(Fish::direction, angle/turnDampen);
     Fish::rotation = Vector2Angle(Fish::direction, Vector2{1,0});
 
 
-    Fish::position = Vector2Add(Fish::position, Vector2Scale(Fish::direction, speed/100));
+    Fish::position = Vector2Add(Fish::position, Vector2Scale(Vector2Normalize(Fish::direction), speed));
     Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width, (float)texture.height};
 
 
