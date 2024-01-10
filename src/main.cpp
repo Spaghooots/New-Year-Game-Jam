@@ -16,10 +16,10 @@ int main(void) {
     Texture2D cursorTexture = LoadTexture("assets/graphics/fish_food_cursor.png");
     
     // All my fishies :)
-    Fish headFish = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 2);
-    Fish Fishron = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 10);
-    Fish LeFishe = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 10);
-    Fish Terry = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2}, 10);
+    Fish headFish = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
+    Fish Fishron = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
+    Fish LeFishe = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
+    Fish Terry = Fish(tardigradeTexture, Vector2{screenWidth/2, screenHeight/2});
 
     std::vector<Food> foodItems;
 
