@@ -1,4 +1,6 @@
+#include <iostream>
 #include <raylib.h>
+#include <string>
 
 class Food
 {
@@ -8,27 +10,21 @@ public:
     void Update(float frameTime, float waterLevelY);
     void Draw();
 private:
-    Texture2D _texture;
-    Vector2 _position;
-    float _gravityInAir;
-    float _gravityInWater;
+    float xPos = GetRandomValue(0, GetScreenWidth() * 100) / 100.0f;
+    float yPos = 0.0f;
+    float _gravityInAir = 300.0f;
+    float _gravityInWater = 125.0f;
 };
 
 
-Food::Food()
-{
-    _position = Vector2{GetRandomValue(0, GetScreenWidth() * 100) / 100.0f, 0};
-    _gravityInAir = 300.0f;
-    _gravityInWater = 125.0f;
-}
+Food::Food() {}
 
 Food::~Food() {}
 
 void Food::Update(float frameTime, float waterLevelY)
 {
-    _position = Vector2Add(_position, Vector2{0, ((_position.y <= waterLevelY) ? _gravityInAir : _gravityInWater) * frameTime});
-
-    if (_position.y > GetScreenHeight() / 2)
+    yPos += (yPos <= waterLevelY ? _gravityInAir : _gravityInWater) * frameTime;
+    if (yPos > GetScreenHeight() / 2)
     {
         Food::~Food();
     }
@@ -36,5 +32,5 @@ void Food::Update(float frameTime, float waterLevelY)
 
 void Food::Draw()
 {
-    DrawCircle(_position.x, _position.y, 16, WHITE);
+    DrawCircle((int)xPos, (int)yPos, 16, YELLOW);
 }
