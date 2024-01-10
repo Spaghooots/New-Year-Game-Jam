@@ -1,4 +1,4 @@
-#include <iostream>
+#include <string>
 #include <vector>
 #include <raylib.h>
 #include "fish.h"
@@ -23,8 +23,8 @@ int main(void) {
 
     std::vector<Food> foodItems;
 
-    int foodTimer = 0;
-    int foodSpawnDelayMilliseconds = 300000;
+    float foodTimer = 0;
+    float foodSpawnDelaySeconds = 3.0f;
     int waterLevelY = 50;
 
     SetTargetFPS(60);
@@ -38,7 +38,7 @@ int main(void) {
         Terry.Update(LeFishe.getPosition());
 
         foodTimer += GetFrameTime();
-        if (foodTimer + GetFrameTime() >= foodSpawnDelayMilliseconds)
+        if (foodTimer >= foodSpawnDelaySeconds)
         {
             foodItems.push_back(Food());
             foodTimer = 0;
