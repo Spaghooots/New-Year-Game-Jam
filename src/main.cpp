@@ -56,9 +56,14 @@ int main(void) {
             foodTimer = 0;
         }
 
-        for (Food foodItem : foodItems)
+        for (int i = 0; i < foodItems.size(); i++)
         {
-            foodItem.Update(GetFrameTime(), waterLevelY);
+            foodItems[i].Update(waterLevelY);
+
+            if (foodItems[i].GetY() >= GetScreenHeight() / 2)
+            {
+                foodItems.erase(foodItems.begin() + i);
+            }
         }
 
         BeginDrawing();
