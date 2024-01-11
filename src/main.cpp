@@ -60,7 +60,7 @@ int main(void) {
         {
             foodItems[i].Update(waterLevelY);
 
-            if (foodItems[i].GetY() >= GetScreenHeight() / 2)
+            if (foodItems[i].getY() >= GetScreenHeight() + foodItems[i].getRadius())
             {
                 foodItems.erase(foodItems.begin() + i);
             }
