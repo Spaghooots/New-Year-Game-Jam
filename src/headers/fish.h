@@ -73,7 +73,7 @@ void Fish::Update(Vector2 desiredPosition) {
     Fish::position = Vector2Add(Fish::position, Vector2Scale(Vector2Normalize(Fish::direction), speed));
 
     // Update Draw rectangle
-    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width * 2, (float)texture.height};
+    Fish::rectDraw = Rectangle{position.x, position.y, (float)texture.width, (float)texture.height};
 
     // Flip fish
     if (Fish::direction.x < 0) {
