@@ -39,7 +39,6 @@ int main(void) {
     // Game Loop
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
-
         // Check Collisions Fish
         for (Fish fishie : fishies) {
             if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
@@ -111,9 +110,17 @@ int main(void) {
             DrawTexture(backgroundTexture, 0, 0, WHITE);
             
             if (isAlive) {
-                // Draw cursor if alive
-                DrawTexture(playerFishTexture, GetMouseX(), GetMouseY(), WHITE);
-                
+                Rectangle sourceRect;
+                if (GetMouseDelta().x > 0) {
+                    sourceRect = Rectangle{0, 0, float(playerFishTexture.width), float(playerFishTexture.height)};
+                } else if (GetMouseDelta().x < 0) {
+                    sourceRect = Rectangle{0, 0, -float(playerFishTexture.width), float(playerFishTexture.height)};
+                }
+
+                Vector2 center = Vector2{float(playerFishTexture.width) / 2.0f, float(playerFishTexture.height / 2.0f)};
+
+                DrawTexturePro(playerFishTexture, sourceRect, Rectangle{GetMousePosition().x, GetMousePosition().y, 
+                    float(playerFishTexture.width), float(playerFishTexture.height)}, center, 0, WHITE);
             }
             else {
                 // Draw death message when dead
@@ -133,7 +140,6 @@ int main(void) {
 
             
         EndDrawing();
-
     }
 
     UnloadTexture(backgroundTexture);
