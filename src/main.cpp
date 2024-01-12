@@ -13,6 +13,7 @@ int main(void) {
     InitWindow(screenWidth, screenHeight, "Template");
 
     // Load Textures
+    Texture2D backgroundTexture = LoadTexture("assets/graphics/background.png");
     Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaserFish.png");
     Texture2D cursorTexture = LoadTexture("assets/graphics/fish_food_cursor.png");
     Texture2D foodTexture = LoadTexture("assets/graphics/fish_treat.png");
@@ -107,7 +108,7 @@ int main(void) {
             ClearBackground(SKYBLUE);
             // Water
             DrawRectangle(0, waterLevelY, GetScreenWidth(), GetScreenHeight() - waterLevelY, BLUE);
-            
+            DrawTexture(backgroundTexture, 0, 0, WHITE);
             
             if (isAlive) {
                 // Draw cursor if alive
@@ -135,6 +136,7 @@ int main(void) {
 
     }
 
+    UnloadTexture(backgroundTexture);
     UnloadTexture(chaserFishTexture);
     UnloadTexture(cursorTexture);
     UnloadTexture(foodTexture);
