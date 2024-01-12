@@ -15,7 +15,7 @@ int main(void) {
     // Load Textures
     Texture2D backgroundTexture = LoadTexture("assets/graphics/background.png");
     Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaser_fish.png");
-    Texture2D playerFishTexture = LoadTexture("assets/graphics/playerFish.png");
+    Texture2D playerFishTexture = LoadTexture("assets/graphics/player_fish.png");
     Texture2D foodTexture = LoadTexture("assets/graphics/fish_treat.png");
     
     // World Vectors
