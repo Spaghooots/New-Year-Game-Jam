@@ -5,23 +5,23 @@
 class Food
 {
 public:
-    Food();
+    Food(Texture2D texture);
     ~Food();
     void Update(float waterLevelY);
     void Draw();
     float getX() { return _xPos; }
     float getY() { return _yPos; }
-    float getRadius() { return _radius; }
+    float getRadius() { return _texture.width / 2.0f; }
 private:
+    Texture2D _texture;
     float _xPos = GetRandomValue(0, GetScreenWidth() * 100) / 100.0f;
-    float _yPos = -_radius;
+    float _yPos = -_texture.height;
     float _gravityInAir = 300.0f;
     float _gravityInWater = 125.0f;
-    float _radius = 6;
 };
 
 
-Food::Food() {}
+Food::Food(Texture2D texture) { _texture = texture; }
 
 Food::~Food() {}
 
@@ -32,5 +32,5 @@ void Food::Update(float waterLevelY)
 
 void Food::Draw()
 {
-    DrawCircle((int)_xPos, (int)_yPos, _radius, YELLOW);
+    DrawTexture(_texture, _xPos, _yPos, WHITE);
 }

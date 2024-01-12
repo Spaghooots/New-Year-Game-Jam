@@ -15,6 +15,7 @@ int main(void) {
     // Load Textures
     Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaserFish.png");
     Texture2D cursorTexture = LoadTexture("assets/graphics/fish_food_cursor.png");
+    Texture2D foodTexture = LoadTexture("assets/graphics/fish_treat.png");
     
     // World Vectors
     std::vector<Food> foodItems;
@@ -47,7 +48,8 @@ int main(void) {
 
         // Check Collision Food
         for (int i = 0; i < foodItems.size(); i++) {
-            if (CheckCollisionCircles(GetMousePosition(), playerHitRad, Vector2{foodItems[i].getX(), foodItems[i].getY()}, foodItems[i].getRadius())) {
+            Vector2 foodCenterPoint = Vector2{foodItems[i].getX() + foodItems[i].getRadius(), foodItems[i].getY() + foodItems[i].getRadius()};
+            if (CheckCollisionCircles(GetMousePosition(), playerHitRad, foodCenterPoint, foodItems[i].getRadius())) {
                 
                 // Spawn Fish
                 if(GetMouseX() < screenWidth/2) {
@@ -75,7 +77,7 @@ int main(void) {
             foodTimer += GetFrameTime();
             if (foodTimer >= foodSpawnDelaySeconds)
             {
-                foodItems.push_back(Food());
+                foodItems.push_back(Food(foodTexture));
                 foodTimer = 0;
             }
         }
@@ -95,7 +97,7 @@ int main(void) {
         {
             foodItems[i].Update(waterLevelY);
 
-            if (foodItems[i].getY() >= GetScreenHeight() + foodItems[i].getRadius())
+            if (foodItems[i].getY() >= GetScreenHeight())
             {
                 foodItems.erase(foodItems.begin() + i);
             }
@@ -135,6 +137,7 @@ int main(void) {
 
     UnloadTexture(chaserFishTexture);
     UnloadTexture(cursorTexture);
+    UnloadTexture(foodTexture);
     CloseWindow();
 
     return 0;
