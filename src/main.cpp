@@ -15,7 +15,7 @@ int main(void) {
     // Load Textures
     Texture2D backgroundTexture = LoadTexture("assets/graphics/background.png");
     Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaserFish.png");
-    Texture2D cursorTexture = LoadTexture("assets/graphics/fish_food_cursor.png");
+    Texture2D playerFishTexture = LoadTexture("assets/graphics/playerFish.png");
     Texture2D foodTexture = LoadTexture("assets/graphics/fish_treat.png");
     
     // World Vectors
@@ -112,7 +112,7 @@ int main(void) {
             
             if (isAlive) {
                 // Draw cursor if alive
-                DrawTexture(cursorTexture, GetMouseX(), GetMouseY(), WHITE);
+                DrawTexture(playerFishTexture, GetMouseX(), GetMouseY(), WHITE);
                 
             }
             else {
@@ -138,7 +138,7 @@ int main(void) {
 
     UnloadTexture(backgroundTexture);
     UnloadTexture(chaserFishTexture);
-    UnloadTexture(cursorTexture);
+    UnloadTexture(playerFishTexture);
     UnloadTexture(foodTexture);
     CloseWindow();
 
