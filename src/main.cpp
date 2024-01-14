@@ -77,21 +77,6 @@ int main(void) {
                 // Window Bounds (y)
                 if (GetMouseY() < 0) SetMousePosition(GetMouseX(), 0);
                 else if (GetMouseY() > screenHeight) SetMousePosition(GetMouseX(), screenHeight);
-
-                // Fish Update
-                fishies[0].Update(GetMousePosition());
-                for (int i = 1; i < fishies.size(); i++) {
-                    fishies[i].Update(fishies[i-1].getPositionFollow());
-                }
-
-                // Fish Collision
-                for (Fish fishie : fishies) {
-                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
-                        gameState = GameOver;
-                        PlaySound(deathSound);
-                        EnableCursor();
-                    }
-                }
                 
                 // Spawn Food
                 foodTimer += GetFrameTime();
@@ -128,6 +113,21 @@ int main(void) {
                         if (score > 0) score--;
                         foodItems.erase(foodItems.begin() + i);
                         PlaySound(wrongSound);
+                    }
+                }
+
+                // Fish Update
+                fishies[0].Update(GetMousePosition());
+                for (int i = 1; i < fishies.size(); i++) {
+                    fishies[i].Update(fishies[i-1].getPositionFollow());
+                }
+
+                // Fish Collision
+                for (Fish fishie : fishies) {
+                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
+                        gameState = GameOver;
+                        PlaySound(deathSound);
+                        EnableCursor();
                     }
                 }
 
