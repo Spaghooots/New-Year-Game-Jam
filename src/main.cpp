@@ -23,12 +23,13 @@ int main(void) {
     std::vector<Fish> fishies;
 
     // Fish Variables
-    int fishAmount = 1;
+    int score = 0;
     fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
 
     // Food Variables
     float foodTimer = 0;
     float foodSpawnDelaySeconds = 3.0f;
+    std::string treatsHudMessage = "Fish Treats Eaten: ";
     int waterLevelY = 50;
 
     // Player Variables
@@ -59,10 +60,12 @@ int main(void) {
                     } else {
                         fishies.push_back(Fish(chaserFishTexture, Vector2{-20, (float)GetRandomValue(0, screenHeight)}, 10));
                     }
-                    fishAmount ++;
 
                     // Delete food
                     foodItems.erase(foodItems.begin() + i);
+
+                    // Increment score
+                    score++;
                 }
             }
         }
@@ -72,7 +75,7 @@ int main(void) {
 
             // Fish Movement
             fishies[0].Update(GetMousePosition());
-            for (int i = 1; i < fishAmount; i++) {
+            for (int i = 1; i < fishies.size(); i++) {
                 fishies[i].Update(fishies[i-1].getPositionFollow());
             }
 
@@ -89,7 +92,7 @@ int main(void) {
             fishies = std::vector<Fish>{};
             foodItems = std::vector<Food>{};
             fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
-            fishAmount = 1;
+            score = 0;
 
             isAlive = true;
         }
@@ -141,7 +144,7 @@ int main(void) {
             }
 
             // Score
-            DrawText(std::to_string(fishAmount - 1).c_str(), 0, 0, 24, GOLD);            
+            DrawText((treatsHudMessage + std::to_string(score)).c_str(), 5, 5, 24, GOLD);            
         EndDrawing();
     }
 
