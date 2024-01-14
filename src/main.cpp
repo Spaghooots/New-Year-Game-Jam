@@ -13,10 +13,12 @@ int main(void) {
     InitWindow(screenWidth, screenHeight, "Template");
 
     // Load Textures
+    SetTextureFilter(GetFontDefault().texture, TEXTURE_FILTER_POINT);
     Texture2D backgroundTexture = LoadTexture("assets/graphics/background.png");
     Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaser_fish.png");
     Texture2D playerFishTexture = LoadTexture("assets/graphics/player_fish.png");
     Texture2D foodTexture = LoadTexture("assets/graphics/fish_treat.png");
+    Font fontLemon = LoadFont("assets/graphics/lemon_regular.ttf");
     
     // World Vectors
     std::vector<Food> foodItems;
@@ -141,11 +143,22 @@ int main(void) {
                     DrawTexturePro(playerFishTexture, sourceRect, Rectangle{GetMousePosition().x, GetMousePosition().y, 
                         float(playerFishTexture.width), float(playerFishTexture.height)}, center, 0, WHITE);
 
-                    DrawText((treatsHudMessage + std::to_string(score)).c_str(), 5, 5, 24, GOLD);            
+                    // Score text
+                    DrawTextEx(fontLemon, (treatsHudMessage + std::to_string(score)).c_str(), Vector2{0, 0}, 32, 0.3f, WHITE);
                     break;
                 }
                 case GameOver: {
-                    DrawText("press space to reset", 100, 100, 20, WHITE);
+                    // Game Over!
+                    DrawTextPro(fontLemon, "Game Over!", Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() * 0.3f}, 
+                        Vector2{MeasureText("Game Over!", 48) / 2.0f, 0.5f}, 0, 48, 0.3f, ORANGE);
+                    
+                    // Final Score
+                    DrawTextPro(fontLemon, ("Treats eaten: " + std::to_string(score)).c_str(), Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() * 0.4f}, 
+                        Vector2{MeasureText(("Treats eaten: " + std::to_string(score)).c_str(), 24) / 2.0f, 0.5f}, 0, 24, 0.3f, WHITE);
+
+                    // Prompt
+                    DrawTextPro(fontLemon, "Press 'space' to retry.", Vector2{GetScreenWidth() / 2.0f + 25, GetScreenHeight() * 0.5f}, 
+                        Vector2{MeasureText("Press 'space' to retry.", 30) / 2.0f, 0.5f}, 0, 30, 0.3f, BLACK);
                     break;
                 }
             }
@@ -168,6 +181,7 @@ int main(void) {
     UnloadTexture(chaserFishTexture);
     UnloadTexture(playerFishTexture);
     UnloadTexture(foodTexture);
+    UnloadFont(fontLemon);
     CloseWindow();
 
     return 0;
