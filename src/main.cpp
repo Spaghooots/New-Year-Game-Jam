@@ -24,7 +24,7 @@ int main(void) {
     Sound eatSound = LoadSound("assets/sounds/eat.wav");
     Sound wrongSound = LoadSound("assets/sounds/wrong.wav");
 
-    Music music = LoadMusicStream("assets/sounds/fishSong.mp3");
+    Music music = LoadMusicStream("assets/sounds/fishSong.wav");
 
     Font fontLemon = LoadFont("assets/graphics/lemon_regular.ttf");
 
