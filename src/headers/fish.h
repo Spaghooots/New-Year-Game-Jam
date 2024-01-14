@@ -32,7 +32,7 @@ private:
 public:
 
     // Fish Functions
-    Fish(Texture2D texture, Vector2 position, float turnDampen);
+    Fish(Texture2D texture);
     Vector2 getPosition() { return position; }
     Vector2 getPositionFollow() { return Vector2Subtract(position,Vector2Scale(Vector2Normalize(direction), texture.width/2 + 10)); }
     Texture2D getTexture() { return texture; }
@@ -40,7 +40,7 @@ public:
     void Draw();
 };
 
-Fish::Fish(Texture2D texture, Vector2 position, float turnDampen) {
+Fish::Fish(Texture2D texture) {
 
     // Start facing to the right
     Fish::direction.x = 1;
@@ -51,9 +51,17 @@ Fish::Fish(Texture2D texture, Vector2 position, float turnDampen) {
     Fish::origin.y = texture.height/2;
 
     // Set Constructor variables
-    Fish::turnDampen = turnDampen;
+    Fish::turnDampen = 10;
     Fish::texture = texture;
-    Fish::position = position;
+
+    int xPos;
+    if(GetMouseX() < GetScreenWidth() / 2) {
+        xPos = GetScreenWidth() + 20;
+    } else {
+        xPos = -20;
+    }
+
+    Fish::position = Vector2{(float)xPos, (float)GetRandomValue(0, GetScreenHeight())};
 
     // Create slice of spritesheet (whole thing in this case)
     Fish::rectSlice = Rectangle{0, 0, (float)texture.width, (float)texture.height};

@@ -50,7 +50,7 @@ int main(void) {
         {
             case Menu: {
                 if (IsKeyPressed(KEY_SPACE)) {
-                    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
+                    fishies.push_back(Fish(chaserFishTexture));
                     gameState = Gameplay;
                     DisableCursor();
                 }
@@ -85,11 +85,7 @@ int main(void) {
                     if (CheckCollisionCircles(GetMousePosition(), playerHitRad, foodCenterPoint, foodItems[i].getRadius())) {
                         
                         // Spawn Fish
-                        if(GetMouseX() < screenWidth/2) {
-                            fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth+20, (float)GetRandomValue(0, screenHeight)}, 10));
-                        } else {
-                            fishies.push_back(Fish(chaserFishTexture, Vector2{-20, (float)GetRandomValue(0, screenHeight)}, 10));
-                        }
+                        fishies.push_back(Fish(chaserFishTexture));
 
                         // Delete food
                         foodItems.erase(foodItems.begin() + i);
@@ -120,7 +116,7 @@ int main(void) {
                 if (IsKeyPressed(KEY_SPACE)) {
                     DisableCursor();
                     fishies = std::vector<Fish>{};
-                    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
+                    fishies.push_back(Fish(chaserFishTexture));
                     foodItems = std::vector<Food>{};
                     score = 0;
                     gameState = Gameplay;
