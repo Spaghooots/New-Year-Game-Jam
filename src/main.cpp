@@ -11,7 +11,7 @@ int main(void) {
     const int screenWidth = 800;
     const int screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "Template");
+    InitWindow(screenWidth, screenHeight, "Food Chain");
     InitAudioDevice();
 
     // Load Textures
