@@ -2,3 +2,4 @@
 /build/game.js
 /build/game.wasm
 /build/game.data
+.vscode/settings.json

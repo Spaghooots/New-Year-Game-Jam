@@ -15,13 +15,17 @@ public:
 private:
     Texture2D _texture;
     float _xPos = GetRandomValue(0, GetScreenWidth() * 100) / 100.0f;
-    float _yPos = -_texture.height;
+    float _yPos;
     float _gravityInAir = 300.0f;
     float _gravityInWater = 125.0f;
 };
 
 
-Food::Food(Texture2D texture) { _texture = texture; }
+Food::Food(Texture2D texture)
+{ 
+    _texture = texture;
+    _yPos = -texture.height / 2.0f;
+}
 
 Food::~Food() {}
 
