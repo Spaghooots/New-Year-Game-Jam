@@ -44,14 +44,14 @@ Fish::Fish(Texture2D texture) {
     Fish::turnDampen = 10;
     Fish::texture = texture;
 
-    int xPos;
+    Fish::position = Vector2{0, (float)GetRandomValue(0, GetScreenHeight())};
     if(GetMouseX() < GetScreenWidth() / 2) {
-        xPos = GetScreenWidth() + 20;
+        Fish::position.x = GetScreenWidth() + 20;
     } else {
-        xPos = -20;
+        Fish::position.x = -20;
     }
 
-    Fish::position = Vector2{(float)xPos, (float)GetRandomValue(0, GetScreenHeight())};
+    
 
     // Create slice of spritesheet (whole thing in this case)
     Fish::rectSlice = Rectangle{0, 0, (float)texture.width, (float)texture.height};

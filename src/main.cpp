@@ -26,8 +26,8 @@ int main(void) {
     Sound wrongSound = LoadSound("assets/sounds/wrong.wav");
     Sound deathSound = LoadSound("assets/sounds/death.wav");
 
+    // Load misc.
     Music music = LoadMusicStream("assets/sounds/fishSong.wav");
-
     Font fontLemon = LoadFont("assets/graphics/lemon_regular.ttf");
 
     PlayMusicStream(music);
@@ -70,6 +70,7 @@ int main(void) {
             case Gameplay: {
 
                 musicVol = .8;
+<<<<<<< Updated upstream
                 // Window Bounds (x)
                 if (GetMouseX() < 0) SetMousePosition(0, GetMouseY());
                 else if (GetMouseX() > screenWidth) SetMousePosition(screenWidth, GetMouseY());
@@ -92,6 +93,25 @@ int main(void) {
                         EnableCursor();
                     }
                 }
+=======
+
+                // Window Bounds (Could be cleaned up better)=
+                if (GetMouseX() > 0 && GetMouseX() < screenWidth &&
+                    GetMouseY() > 0 && GetMouseY() < screenHeight)
+                {
+                    playerFishPosition = GetMousePosition();
+                    playerFishDelta = GetMouseDelta();
+                }
+                else
+                {
+                    if (GetMouseX() < 0) playerFishPosition.x = 0;
+                    if (GetMouseX() > GetScreenWidth()) playerFishPosition.x = GetScreenWidth();
+                    if (GetMouseY() < 0) playerFishPosition.y = 0;
+                    if (GetMouseY() > GetScreenHeight()) playerFishPosition.y = GetScreenHeight();
+                }
+
+                
+>>>>>>> Stashed changes
                 
                 // Spawn Food
                 foodTimer += GetFrameTime();
@@ -128,6 +148,21 @@ int main(void) {
                         if (score > 0) score--;
                         foodItems.erase(foodItems.begin() + i);
                         PlaySound(wrongSound);
+                    }
+                }
+
+                // Fish Update
+                fishies[0].Update(playerFishPosition);
+                for (int i = 1; i < fishies.size(); i++) {
+                    fishies[i].Update(fishies[i-1].getPositionFollow());
+                }
+
+                // Fish Collision
+                for (Fish fishie : fishies) {
+                    if (CheckCollisionCircles(playerFishPosition, playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
+                        gameState = GameOver;
+                        PlaySound(deathSound);
+                        EnableCursor();
                     }
                 }
 
