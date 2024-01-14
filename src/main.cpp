@@ -52,6 +52,7 @@ int main(void) {
                 if (IsKeyPressed(KEY_SPACE)) {
                     fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
                     gameState = Gameplay;
+                    DisableCursor();
                 }
                 break;
             }
@@ -66,6 +67,7 @@ int main(void) {
                 for (Fish fishie : fishies) {
                     if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
                         gameState = GameOver;
+                        EnableCursor();
                     }
                 }
                 
@@ -116,10 +118,12 @@ int main(void) {
             case GameOver: {
                 // Reset Variables
                 if (IsKeyPressed(KEY_SPACE)) {
+                    DisableCursor();
                     fishies = std::vector<Fish>{};
+                    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
                     foodItems = std::vector<Food>{};
                     score = 0;
-                    gameState = Menu;
+                    gameState = Gameplay;
                 }
                 break;
             }
@@ -149,7 +153,7 @@ int main(void) {
                     DrawTextPro(fontLemon, "Food Chain", Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() * 0.3f}, 
                         Vector2{MeasureText("Food Chain", 48) / 2.0f, 0.5f}, 0, 48, 0.3f, SKYBLUE);
 
-                    DrawTextPro(fontLemon, "Press 'space' to play!", Vector2{GetScreenWidth() / 2.0f + 20, GetScreenHeight() * 0.5f}, 
+                    DrawTextPro(fontLemon, "Press 'space' to play!", Vector2{GetScreenWidth() / 2.0f + 15, GetScreenHeight() * 0.5f}, 
                         Vector2{MeasureText("Press 'space' to play!", 32) / 2.0f, 0.5f}, 0, 32, 0.3f, BLACK);
                     break;
                 }
@@ -183,8 +187,8 @@ int main(void) {
                         Vector2{MeasureText(("Final score: " + std::to_string(score)).c_str(), 24) / 2.0f, 0.5f}, 0, 24, 0.3f, WHITE);
 
                     // Prompt
-                    DrawTextPro(fontLemon, "Press 'space' to return to the title.", Vector2{GetScreenWidth() / 2.0f + 50, GetScreenHeight() * 0.5f}, 
-                        Vector2{MeasureText("Press 'space' to return to the title.", 30) / 2.0f, 0.5f}, 0, 30, 0.3f, BLACK);
+                    DrawTextPro(fontLemon, "Press 'space' to try again.", Vector2{GetScreenWidth() / 2.0f + 30, GetScreenHeight() * 0.5f}, 
+                        Vector2{MeasureText("Press 'space' to try again.", 30) / 2.0f, 0.5f}, 0, 30, 0.3f, BLACK);
                     break;
                 }
             }
