@@ -26,8 +26,8 @@ int main(void) {
     Sound wrongSound = LoadSound("assets/sounds/wrong.wav");
     Sound deathSound = LoadSound("assets/sounds/death.wav");
 
-    // Load misc.
     Music music = LoadMusicStream("assets/sounds/fishSong.wav");
+
     Font fontLemon = LoadFont("assets/graphics/lemon_regular.ttf");
 
     PlayMusicStream(music);
@@ -128,21 +128,6 @@ int main(void) {
                         if (score > 0) score--;
                         foodItems.erase(foodItems.begin() + i);
                         PlaySound(wrongSound);
-                    }
-                }
-
-                // Fish Update
-                fishies[0].Update(GetMousePosition());
-                for (int i = 1; i < fishies.size(); i++) {
-                    fishies[i].Update(fishies[i-1].getPositionFollow());
-                }
-
-                // Fish Collision
-                for (Fish fishie : fishies) {
-                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
-                        gameState = GameOver;
-                        PlaySound(deathSound);
-                        EnableCursor();
                     }
                 }
 
