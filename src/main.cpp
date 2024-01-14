@@ -29,7 +29,7 @@ int main(void) {
     std::vector<Food> foodItems;
     std::vector<Fish> fishies;
     enum GameState { Menu, Gameplay, GameOver};
-    GameState gameState = Gameplay;
+    GameState gameState = Menu;
 
     // Fish Variables
     int score = 0;
@@ -38,7 +38,6 @@ int main(void) {
     // Food Variables
     float foodTimer = 0;
     float foodSpawnDelaySeconds = 3.0f;
-    std::string treatsHudMessage = "Fish Treats Eaten: ";
     int waterLevelY = 50;
 
     // Player Variables
@@ -51,6 +50,10 @@ int main(void) {
         switch(gameState)
         {
             case Menu: {
+                if (IsKeyPressed(KEY_SPACE)) {
+                    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
+                    gameState = Gameplay;
+                }
                 break;
             }
             case Gameplay: {
@@ -103,6 +106,7 @@ int main(void) {
 
                     if (foodItems[i].getY() >= GetScreenHeight())
                     {
+                        if (score > 0) score--;
                         foodItems.erase(foodItems.begin() + i);
                         PlaySound(wrongSound);
                     }
@@ -115,9 +119,8 @@ int main(void) {
                 if (IsKeyPressed(KEY_SPACE)) {
                     fishies = std::vector<Fish>{};
                     foodItems = std::vector<Food>{};
-                    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
                     score = 0;
-                    gameState = Gameplay;
+                    gameState = Menu;
                 }
                 break;
             }
@@ -128,10 +131,27 @@ int main(void) {
             ClearBackground(SKYBLUE);
             DrawTexture(backgroundTexture, 0, 0, WHITE);
 
+            // Draw Fish
+            for (Fish fishie : fishies) {
+                fishie.Draw();
+            }
+
+            // Draw Food
+            for (Food foodItem : foodItems)
+            {
+                foodItem.Draw();
+            }
+
             // Drawing here depends on state
             switch (gameState)
             {
                 case Menu: {
+                    // Title
+                    DrawTextPro(fontLemon, "Food Chain", Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() * 0.3f}, 
+                        Vector2{MeasureText("Food Chain", 48) / 2.0f, 0.5f}, 0, 48, 0.3f, SKYBLUE);
+
+                    DrawTextPro(fontLemon, "Press 'space' to play!", Vector2{GetScreenWidth() / 2.0f + 20, GetScreenHeight() * 0.5f}, 
+                        Vector2{MeasureText("Press 'space' to play!", 32) / 2.0f, 0.5f}, 0, 32, 0.3f, BLACK);
                     break;
                 }
                 case Gameplay: {
@@ -151,7 +171,7 @@ int main(void) {
                         float(playerFishTexture.width), float(playerFishTexture.height)}, center, 0, WHITE);
 
                     // Score text
-                    DrawTextEx(fontLemon, (treatsHudMessage + std::to_string(score)).c_str(), Vector2{0, 0}, 32, 0.3f, WHITE);
+                    DrawTextEx(fontLemon, ("Score: " + std::to_string(score)).c_str(), Vector2{0, 0}, 32, 0.3f, WHITE);
                     break;
                 }
                 case GameOver: {
@@ -160,25 +180,14 @@ int main(void) {
                         Vector2{MeasureText("Game Over!", 48) / 2.0f, 0.5f}, 0, 48, 0.3f, ORANGE);
                     
                     // Final Score
-                    DrawTextPro(fontLemon, ("Treats eaten: " + std::to_string(score)).c_str(), Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() * 0.4f}, 
-                        Vector2{MeasureText(("Treats eaten: " + std::to_string(score)).c_str(), 24) / 2.0f, 0.5f}, 0, 24, 0.3f, WHITE);
+                    DrawTextPro(fontLemon, ("Final score: " + std::to_string(score)).c_str(), Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() * 0.4f}, 
+                        Vector2{MeasureText(("Final score: " + std::to_string(score)).c_str(), 24) / 2.0f, 0.5f}, 0, 24, 0.3f, WHITE);
 
                     // Prompt
-                    DrawTextPro(fontLemon, "Press 'space' to retry.", Vector2{GetScreenWidth() / 2.0f + 25, GetScreenHeight() * 0.5f}, 
-                        Vector2{MeasureText("Press 'space' to retry.", 30) / 2.0f, 0.5f}, 0, 30, 0.3f, BLACK);
+                    DrawTextPro(fontLemon, "Press 'space' to return to the title.", Vector2{GetScreenWidth() / 2.0f + 50, GetScreenHeight() * 0.5f}, 
+                        Vector2{MeasureText("Press 'space' to return to the title.", 30) / 2.0f, 0.5f}, 0, 30, 0.3f, BLACK);
                     break;
                 }
-            }
-
-            // Draw Fish
-            for (Fish fishie : fishies) {
-                fishie.Draw();
-            }
-
-            // Draw Food
-            for (Food foodItem : foodItems)
-            {
-                foodItem.Draw();
             }
 
         EndDrawing();
