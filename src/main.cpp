@@ -33,7 +33,6 @@ int main(void) {
 
     // Fish Variables
     int score = 0;
-    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
 
     // Food Variables
     float foodTimer = 0;
