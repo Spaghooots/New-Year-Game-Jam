@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <raylib.h>
+#include <algorithm>
 #include "fish.h"
 #include "food.h"
 
@@ -37,6 +38,8 @@ int main(void) {
     GameState gameState = Menu;
 
     // Fish Variables
+    Vector2 playerFishPosition = Vector2{screenWidth, screenHeight};
+    Vector2 playerFishDelta = GetMouseDelta();
     int score = 0;
 
     // Food Variables
@@ -64,15 +67,30 @@ int main(void) {
                 break;
             }
             case Gameplay: {
+                // Window Bounds (Could be cleaned up better)
+                if (GetMouseX() > 0 && GetMouseX() < screenWidth &&
+                    GetMouseY() > 0 && GetMouseY() < screenHeight)
+                {
+                    playerFishPosition = GetMousePosition();
+                    playerFishDelta = GetMouseDelta();
+                }
+                else
+                {
+                    if (GetMouseX() < 0) playerFishPosition.x = 0;
+                    if (GetMouseX() > GetScreenWidth()) playerFishPosition.x = GetScreenWidth();
+                    if (GetMouseY() < 0) playerFishPosition.y = 0;
+                    if (GetMouseY() > GetScreenHeight()) playerFishPosition.y = GetScreenHeight();
+                }
+
                 // Fish Update
-                fishies[0].Update(GetMousePosition());
+                fishies[0].Update(playerFishPosition);
                 for (int i = 1; i < fishies.size(); i++) {
                     fishies[i].Update(fishies[i-1].getPositionFollow());
                 }
 
                 // Fish Collision
                 for (Fish fishie : fishies) {
-                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
+                    if (CheckCollisionCircles(playerFishPosition, playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
                         gameState = GameOver;
                         EnableCursor();
                     }
@@ -89,7 +107,7 @@ int main(void) {
                 // Food Collision
                 for (int i = 0; i < foodItems.size(); i++) {
                     Vector2 foodCenterPoint = Vector2{foodItems[i].getX() + foodItems[i].getRadius(), foodItems[i].getY() + foodItems[i].getRadius()};
-                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, foodCenterPoint, foodItems[i].getRadius())) {
+                    if (CheckCollisionCircles(playerFishPosition, playerHitRad, foodCenterPoint, foodItems[i].getRadius())) {
                         
                         // Spawn Fish
                         fishies.push_back(Fish(chaserFishTexture));
@@ -163,9 +181,9 @@ int main(void) {
                 case Gameplay: {
                     // Determining direction player fish faces
                     Rectangle sourceRect;
-                    if (GetMouseDelta().x > 0) {
+                    if (playerFishDelta.x > 0) {
                         sourceRect = Rectangle{0, 0, float(playerFishTexture.width), float(playerFishTexture.height)};
-                    } else if (GetMouseDelta().x < 0) {
+                    } else if (playerFishDelta.x < 0) {
                         sourceRect = Rectangle{0, 0, -float(playerFishTexture.width), float(playerFishTexture.height)};
                     }
 
@@ -173,7 +191,7 @@ int main(void) {
                     Vector2 center = Vector2{float(playerFishTexture.width) / 2.0f, float(playerFishTexture.height / 2.0f)};
 
                     // Fish drawing
-                    DrawTexturePro(playerFishTexture, sourceRect, Rectangle{GetMousePosition().x, GetMousePosition().y, 
+                    DrawTexturePro(playerFishTexture, sourceRect, Rectangle{playerFishPosition.x, playerFishPosition.y, 
                         float(playerFishTexture.width), float(playerFishTexture.height)}, center, 0, WHITE);
 
                     // Score text
