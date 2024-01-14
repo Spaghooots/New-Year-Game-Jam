@@ -1,13 +1,3 @@
-/* 
-All my fishies :) (Do not delete this comment!)
-    Fish headFish = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
-    Fish Fishron = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
-    Fish LeFishe = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
-    Fish Terry = Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2});
-*/
-
-
-
 #include <raylib.h>
 #include <raymath.h>
 

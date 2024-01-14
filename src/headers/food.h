@@ -7,7 +7,7 @@ class Food
 public:
     Food(Texture2D texture);
     ~Food();
-    void Update(float waterLevelY);
+    void Update();
     void Draw();
     float getX() { return _xPos; }
     float getY() { return _yPos; }
@@ -18,6 +18,7 @@ private:
     float _yPos;
     float _gravityInAir = 300.0f;
     float _gravityInWater = 125.0f;
+    int _foodSpeedUpY = 50;
 };
 
 
@@ -29,9 +30,9 @@ Food::Food(Texture2D texture)
 
 Food::~Food() {}
 
-void Food::Update(float waterLevelY)
+void Food::Update()
 {
-    _yPos += (_yPos <= waterLevelY ? _gravityInAir : _gravityInWater) * GetFrameTime();
+    _yPos += (_yPos <= _foodSpeedUpY ? _gravityInAir : _gravityInWater) * GetFrameTime();
 }
 
 void Food::Draw()

@@ -42,7 +42,6 @@ int main(void) {
     // Food Variables
     float foodTimer = 0;
     float foodSpawnDelaySeconds = 3.0f;
-    int waterLevelY = 50;
 
     // Player Variables
     float playerHitRad = 10;
@@ -107,7 +106,7 @@ int main(void) {
                 // Food Update
                 for (int i = 0; i < foodItems.size(); i++)
                 {
-                    foodItems[i].Update(waterLevelY);
+                    foodItems[i].Update();
 
                     if (foodItems[i].getY() >= GetScreenHeight())
                     {
