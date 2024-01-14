@@ -21,6 +21,8 @@ int main(void) {
     // World Vectors
     std::vector<Food> foodItems;
     std::vector<Fish> fishies;
+    enum GameState { Menu, Gameplay, GameOver};
+    GameState gameState = Gameplay;
 
     // Fish Variables
     int score = 0;
@@ -33,105 +35,121 @@ int main(void) {
     int waterLevelY = 50;
 
     // Player Variables
-    bool isAlive = true;
     float playerHitRad = 10;
 
 
     // Game Loop
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
-        // Check Collisions Fish
-        for (Fish fishie : fishies) {
-            if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
-                isAlive = false;
-            }
-        }
-
-        // Check Collision Food
-        if (isAlive)
+        switch(gameState)
         {
-            for (int i = 0; i < foodItems.size(); i++) {
-                Vector2 foodCenterPoint = Vector2{foodItems[i].getX() + foodItems[i].getRadius(), foodItems[i].getY() + foodItems[i].getRadius()};
-                if (CheckCollisionCircles(GetMousePosition(), playerHitRad, foodCenterPoint, foodItems[i].getRadius())) {
-                    
-                    // Spawn Fish
-                    if(GetMouseX() < screenWidth/2) {
-                        fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth+20, (float)GetRandomValue(0, screenHeight)}, 10));
-                    } else {
-                        fishies.push_back(Fish(chaserFishTexture, Vector2{-20, (float)GetRandomValue(0, screenHeight)}, 10));
-                    }
-
-                    // Delete food
-                    foodItems.erase(foodItems.begin() + i);
-
-                    // Increment score
-                    score++;
+            case Menu: {
+                break;
+            }
+            case Gameplay: {
+                // Fish Update
+                fishies[0].Update(GetMousePosition());
+                for (int i = 1; i < fishies.size(); i++) {
+                    fishies[i].Update(fishies[i-1].getPositionFollow());
                 }
+
+                // Fish Collision
+                for (Fish fishie : fishies) {
+                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
+                        gameState = GameOver;
+                    }
+                }
+                
+                // Spawn Food
+                foodTimer += GetFrameTime();
+                if (foodTimer >= foodSpawnDelaySeconds)
+                {
+                    foodItems.push_back(Food(foodTexture));
+                    foodTimer = 0;
+                }
+
+                // Food Collision
+                for (int i = 0; i < foodItems.size(); i++) {
+                    Vector2 foodCenterPoint = Vector2{foodItems[i].getX() + foodItems[i].getRadius(), foodItems[i].getY() + foodItems[i].getRadius()};
+                    if (CheckCollisionCircles(GetMousePosition(), playerHitRad, foodCenterPoint, foodItems[i].getRadius())) {
+                        
+                        // Spawn Fish
+                        if(GetMouseX() < screenWidth/2) {
+                            fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth+20, (float)GetRandomValue(0, screenHeight)}, 10));
+                        } else {
+                            fishies.push_back(Fish(chaserFishTexture, Vector2{-20, (float)GetRandomValue(0, screenHeight)}, 10));
+                        }
+
+                        // Delete food
+                        foodItems.erase(foodItems.begin() + i);
+
+                        // Increment score
+                        score++;
+                    }
+                }
+
+                // Food Update
+                for (int i = 0; i < foodItems.size(); i++)
+                {
+                    foodItems[i].Update(waterLevelY);
+
+                    if (foodItems[i].getY() >= GetScreenHeight())
+                    {
+                        foodItems.erase(foodItems.begin() + i);
+                    }
+                }
+
+                break;
             }
-        }
-        
-        // Check if alive
-        if (isAlive) {
-
-            // Fish Movement
-            fishies[0].Update(GetMousePosition());
-            for (int i = 1; i < fishies.size(); i++) {
-                fishies[i].Update(fishies[i-1].getPositionFollow());
-            }
-
-            // Spawn Food
-            foodTimer += GetFrameTime();
-            if (foodTimer >= foodSpawnDelaySeconds)
-            {
-                foodItems.push_back(Food(foodTexture));
-                foodTimer = 0;
-            }
-        }
-        // Let player reset if dead
-        else if (IsKeyPressed(KEY_SPACE)) {
-            fishies = std::vector<Fish>{};
-            foodItems = std::vector<Food>{};
-            fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
-            score = 0;
-
-            isAlive = true;
-        }
-
-        
-        // Delete food that falls
-        for (int i = 0; i < foodItems.size(); i++)
-        {
-            if (isAlive) foodItems[i].Update(waterLevelY);
-
-            if (foodItems[i].getY() >= GetScreenHeight())
-            {
-                foodItems.erase(foodItems.begin() + i);
+            case GameOver: {
+                // Reset Variables
+                if (IsKeyPressed(KEY_SPACE)) {
+                    fishies = std::vector<Fish>{};
+                    foodItems = std::vector<Food>{};
+                    fishies.push_back(Fish(chaserFishTexture, Vector2{screenWidth/2, screenHeight/2}, 20));
+                    score = 0;
+                    gameState = Gameplay;
+                }
+                break;
             }
         }
 
         BeginDrawing();
+            // Water Texture
             ClearBackground(SKYBLUE);
-            // Water
             DrawTexture(backgroundTexture, 0, 0, WHITE);
-            
-            // Draw Player Fish
-            if (isAlive) {
-                Rectangle sourceRect;
-                if (GetMouseDelta().x > 0) {
-                    sourceRect = Rectangle{0, 0, float(playerFishTexture.width), float(playerFishTexture.height)};
-                } else if (GetMouseDelta().x < 0) {
-                    sourceRect = Rectangle{0, 0, -float(playerFishTexture.width), float(playerFishTexture.height)};
+
+            // Drawing here depends on state
+            switch (gameState)
+            {
+                case Menu: {
+                    break;
                 }
+                case Gameplay: {
+                    // Determining direction fish faces
+                    Rectangle sourceRect;
+                    if (GetMouseDelta().x > 0) {
+                        sourceRect = Rectangle{0, 0, float(playerFishTexture.width), float(playerFishTexture.height)};
+                    } else if (GetMouseDelta().x < 0) {
+                        sourceRect = Rectangle{0, 0, -float(playerFishTexture.width), float(playerFishTexture.height)};
+                    }
 
-                Vector2 center = Vector2{float(playerFishTexture.width) / 2.0f, float(playerFishTexture.height / 2.0f)};
+                    // Fish center point
+                    Vector2 center = Vector2{float(playerFishTexture.width) / 2.0f, float(playerFishTexture.height / 2.0f)};
 
-                DrawTexturePro(playerFishTexture, sourceRect, Rectangle{GetMousePosition().x, GetMousePosition().y, 
-                    float(playerFishTexture.width), float(playerFishTexture.height)}, center, 0, WHITE);
-            } else {
-                // Draw death message when dead
-                DrawText("press space to reset", 100, 100, 20, WHITE);
+                    // Fish drawing
+                    DrawTexturePro(playerFishTexture, sourceRect, Rectangle{GetMousePosition().x, GetMousePosition().y, 
+                        float(playerFishTexture.width), float(playerFishTexture.height)}, center, 0, WHITE);
+
+                    DrawText((treatsHudMessage + std::to_string(score)).c_str(), 5, 5, 24, GOLD);            
+                    break;
+                }
+                case GameOver: {
+                    DrawText("press space to reset", 100, 100, 20, WHITE);
+                    break;
+                }
             }
-            
+
             // Draw Fish
             for (Fish fishie : fishies) {
                 fishie.Draw();
@@ -143,8 +161,6 @@ int main(void) {
                 foodItem.Draw();
             }
 
-            // Score
-            DrawText((treatsHudMessage + std::to_string(score)).c_str(), 5, 5, 24, GOLD);            
         EndDrawing();
     }
 
