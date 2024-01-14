@@ -24,6 +24,7 @@ int main(void) {
     // Load Sounds
     Sound eatSound = LoadSound("assets/sounds/eat.wav");
     Sound wrongSound = LoadSound("assets/sounds/wrong.wav");
+    Sound deathSound = LoadSound("assets/sounds/death.wav");
 
     Music music = LoadMusicStream("assets/sounds/fishSong.wav");
 
@@ -92,6 +93,7 @@ int main(void) {
                 for (Fish fishie : fishies) {
                     if (CheckCollisionCircles(playerFishPosition, playerHitRad, fishie.getPosition(), fishie.getTexture().height/2)) {
                         gameState = GameOver;
+                        PlaySound(deathSound);
                         EnableCursor();
                     }
                 }
