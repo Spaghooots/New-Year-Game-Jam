@@ -14,7 +14,7 @@ public:
     float getRadius() { return _texture.width / 2.0f; }
 private:
     Texture2D _texture;
-    float _xPos = GetRandomValue(0, (GetScreenWidth() * 100)) / 100.0f;
+    float _xPos;
     float _yPos;
     float _gravityInAir = 300.0f;
     float _gravityInWater = 125.0f;
@@ -25,6 +25,7 @@ private:
 Food::Food(Texture2D texture)
 { 
     _texture = texture;
+    _xPos = GetRandomValue(0, ((GetScreenWidth()-_texture.width) * 100)) / 100.0f;
     _yPos = -texture.height / 2.0f;
 }
 
