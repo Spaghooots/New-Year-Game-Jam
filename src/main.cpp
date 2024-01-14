@@ -23,7 +23,12 @@ int main(void) {
     // Load Sounds
     Sound eatSound = LoadSound("assets/sounds/eat.wav");
     Sound wrongSound = LoadSound("assets/sounds/wrong.wav");
+
+    Music music = LoadMusicStream("assets/sounds/fishSong.mp3");
+
     Font fontLemon = LoadFont("assets/graphics/lemon_regular.ttf");
+
+    PlayMusicStream(music);
     
     // World Vectors
     std::vector<Food> foodItems;
@@ -46,6 +51,9 @@ int main(void) {
     // Game Loop
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
+
+        UpdateMusicStream(music);
+
         switch(gameState)
         {
             case Menu: {
@@ -191,6 +199,8 @@ int main(void) {
 
         EndDrawing();
     }
+
+    UnloadMusicStream(music);
 
     UnloadSound(eatSound);
     UnloadSound(wrongSound);
