@@ -11,6 +11,7 @@ int main(void) {
     const int screenHeight = 450;
 
     InitWindow(screenWidth, screenHeight, "Template");
+    InitAudioDevice();
 
     // Load Textures
     SetTextureFilter(GetFontDefault().texture, TEXTURE_FILTER_POINT);
@@ -18,6 +19,10 @@ int main(void) {
     Texture2D chaserFishTexture = LoadTexture("assets/graphics/chaser_fish.png");
     Texture2D playerFishTexture = LoadTexture("assets/graphics/player_fish.png");
     Texture2D foodTexture = LoadTexture("assets/graphics/fish_treat.png");
+
+    // Load Sounds
+    Sound eatSound = LoadSound("assets/sounds/eat.wav");
+    Sound wrongSound = LoadSound("assets/sounds/wrong.wav");
     Font fontLemon = LoadFont("assets/graphics/lemon_regular.ttf");
     
     // World Vectors
@@ -84,6 +89,7 @@ int main(void) {
 
                         // Delete food
                         foodItems.erase(foodItems.begin() + i);
+                        PlaySound(eatSound);
 
                         // Increment score
                         score++;
@@ -98,6 +104,7 @@ int main(void) {
                     if (foodItems[i].getY() >= GetScreenHeight())
                     {
                         foodItems.erase(foodItems.begin() + i);
+                        PlaySound(wrongSound);
                     }
                 }
 
@@ -128,7 +135,7 @@ int main(void) {
                     break;
                 }
                 case Gameplay: {
-                    // Determining direction fish faces
+                    // Determining direction player fish faces
                     Rectangle sourceRect;
                     if (GetMouseDelta().x > 0) {
                         sourceRect = Rectangle{0, 0, float(playerFishTexture.width), float(playerFishTexture.height)};
@@ -177,12 +184,15 @@ int main(void) {
         EndDrawing();
     }
 
+    UnloadSound(eatSound);
+    UnloadSound(wrongSound);
+
     UnloadTexture(backgroundTexture);
     UnloadTexture(chaserFishTexture);
     UnloadTexture(playerFishTexture);
     UnloadTexture(foodTexture);
-    UnloadFont(fontLemon);
     CloseWindow();
+
 
     return 0;
 }
