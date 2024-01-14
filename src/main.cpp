@@ -32,11 +32,14 @@ int main(void) {
 
     PlayMusicStream(music);
     
-    // World Vectors
+    // World Variables
     std::vector<Food> foodItems;
     std::vector<Fish> fishies;
     enum GameState { Menu, Gameplay, GameOver};
     GameState gameState = Menu;
+    float musicVol = .2;
+
+    
 
     // Fish Variables
     Vector2 playerFishPosition = Vector2{screenWidth, screenHeight};
@@ -55,6 +58,7 @@ int main(void) {
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
 
+        SetMusicVolume(music, musicVol);
         UpdateMusicStream(music);
 
         switch(gameState)
@@ -68,7 +72,9 @@ int main(void) {
                 break;
             }
             case Gameplay: {
-                // Window Bounds (Could be cleaned up better)
+
+                musicVol = .8;
+                // Window Bounds (Could be cleaned up better)=
                 if (GetMouseX() > 0 && GetMouseX() < screenWidth &&
                     GetMouseY() > 0 && GetMouseY() < screenHeight)
                 {
@@ -140,6 +146,8 @@ int main(void) {
             }
             case GameOver: {
                 // Reset Variables
+                
+                musicVol = .2;
                 if (IsKeyPressed(KEY_SPACE)) {
                     DisableCursor();
                     fishies = std::vector<Fish>{};
